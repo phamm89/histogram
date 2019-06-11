@@ -1,6 +1,6 @@
-def create_histogram(file, band_size):
+def create_histogram(file, band_number):
     nums = get_nums_from_file(file)
-    bands = get_bands(nums, band_size)
+    bands = get_bands(nums, band_number)
     print_histogram(bands)
 
 def get_nums_from_file(file):
@@ -14,10 +14,12 @@ def get_band_size(nums, bands):
     return (max(nums) - min(nums)) // bands
 
 def get_band_value(nums, bands):
+    list_nums = get_nums_from_file(file)
+
     i = 0 
 
-    while i <= nums.len() - 1:
-        num = nums[i]
+    while i <=  len(list_nums) - 1:
+        num = list_nums[i]
         i += 1
         return num
 
@@ -38,7 +40,6 @@ def get_bands(nums, band_size):
         bands[band] += 1
     return bands
 
-
 def print_histogram(bands):
     for band in sorted(bands.keys()):
         print(f"{str(band).rjust(5)} | {'*' * bands[band]}")
@@ -49,14 +50,14 @@ if __name__ == "__main__":
     from pathlib import Path
 
     parser = argparse.ArgumentParser(description='Create a histogram')
-    parser.add_argument('-b', '--bands', default=10, type=float)
+    parser.add_argument('-b', '--band-number', default=10, type=float)
     parser.add_argument('file', help='file to read')
     args = parser.parse_args()
 
     file = Path(args.file)
 
     if file.is_file():
-        create_histogram(file, args.band_size)
+        create_histogram(file, args.band_number)
     else:
         print(f"{file} does not exist!")
         exit(1)

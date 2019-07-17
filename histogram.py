@@ -17,66 +17,44 @@ def get_nums_from_file(file):
             nums.append(float(line.strip()))
     return nums
 
-def get_band_size(nums, bands):
+def get_bands(nums, band_number):
     """Determines band size based on number of numbers and band number."""
     bands = {}
     min_num = min(nums)
     max_num = max(nums)
+
+    # Calculate band size using midpoint
+    band_size = (max_num - min_num) / (band_number - 1)
     
-    return (max(nums) - min(nums)) // bands
-
-def get_band_value(nums, bands):
-    list_nums = get_nums_from_file(file)
-
-    i = 0 
-
-    while i <=  len(list_nums) - 1:
-        num = list_nums[i]
-        i += 1
-        return num
-
-    return num // get_band_size(nums, bands) * get_band_size(nums, bands)
-
-def get_bands(nums, band_size):
-    bands = {}
-    min_band = get_band_value(min(nums), band_size)
-    max_band = get_band_value(max(nums), band_size)
-    current_band = min_band
-
-    while current_band <= max_band:
-        bands[current_band] = 0
-        current_band += band_size
+    # Create histogram
+    band_min = min_num - (band_size / 2)
+    
+    for index in range(band_number):
+        band_max = (index * band_size) + min_num + (band_size / 2)
+        bands[(band_min, band_max)] = 0
+        band_min = band_max
     
     for num in nums:
-        band = get_band_value(num, band_size)
-        bands[band] += 1
+        if get_band_value(num, bands) is None:
+            breakpoint()
+        bands[get_band_value(num, bands)] +=1
+
     return bands
 
-# def get_bands(nums, band_number):
-#     """accepts a list of floats and a desired number of bands,
-#     returning a dictionary of bands and their frequencies. To 
-#     maximize even data representation, both the maximum and 
-#     minimum values are included as endpoints"""
-#     bands = {}
-#     min_num = min(nums)
-#     max_num = max(nums)
-#     band_size = (max_num - min_num) / band_number
-#     for index in range(band_number):
-#         bands[(index * band_size) + min_num] = 0
-#     for num in nums:
-#         band = num // band_size * band_size + min_num
+def get_band_value(num, bands):
 
-#         # accounts for the special case of the max number to include it
-#         # in the highest data bucket as the upper limit
-#         if (band not in bands) and (band - band_size in bands):
-#             bands[band-band_size] += 1
-#         else:
-#             bands[band] += 1
-#     return bands
+    for band in bands:
+        if band[0] <= num <= band[1]:
+            band_value = band
+            return band_value
+
+    return None
+
 
 def print_histogram(bands):
     for band in sorted(bands.keys()):
-        print(f"{str(band).rjust(5)} | {'*' * bands[band]}")
+        band_range = f"{round(band[0],1)}-{round(band[1],1)}"
+        print(f"{band_range.rjust(15)} | {'*' * bands[band]}")
 
 
 if __name__ == "__main__":

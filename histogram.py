@@ -1,5 +1,12 @@
 def create_histogram(file, band_number):
+    """Method receives a file and number of bands to print a histogram"""
     nums = get_nums_from_file(file)
+
+    #  Return a print statement to let user know number of bands is invalid
+    if band_number < 2:
+        print("Error: Band number must be greater than or equal to 2.")
+        return None
+
     bands = get_bands(nums, band_number)
     print_histogram(bands)
 
@@ -11,6 +18,11 @@ def get_nums_from_file(file):
     return nums
 
 def get_band_size(nums, bands):
+    """Determines band size based on number of numbers and band number."""
+    bands = {}
+    min_num = min(nums)
+    max_num = max(nums)
+    
     return (max(nums) - min(nums)) // bands
 
 def get_band_value(nums, bands):
@@ -39,6 +51,28 @@ def get_bands(nums, band_size):
         band = get_band_value(num, band_size)
         bands[band] += 1
     return bands
+
+# def get_bands(nums, band_number):
+#     """accepts a list of floats and a desired number of bands,
+#     returning a dictionary of bands and their frequencies. To 
+#     maximize even data representation, both the maximum and 
+#     minimum values are included as endpoints"""
+#     bands = {}
+#     min_num = min(nums)
+#     max_num = max(nums)
+#     band_size = (max_num - min_num) / band_number
+#     for index in range(band_number):
+#         bands[(index * band_size) + min_num] = 0
+#     for num in nums:
+#         band = num // band_size * band_size + min_num
+
+#         # accounts for the special case of the max number to include it
+#         # in the highest data bucket as the upper limit
+#         if (band not in bands) and (band - band_size in bands):
+#             bands[band-band_size] += 1
+#         else:
+#             bands[band] += 1
+#     return bands
 
 def print_histogram(bands):
     for band in sorted(bands.keys()):
